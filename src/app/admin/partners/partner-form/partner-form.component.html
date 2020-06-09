@@ -4,7 +4,8 @@
       class="basic-campaign-form">
 
   <div class="row">
-    <div class="col-xl-6">
+    <div class="col-xl-6"
+         [class.col-xl-12]="type === FormMode.Create">
       <div class="kt-portlet kt-portlet--height-fluid">
         <div class="kt-portlet__head kt-portlet__head--lg">
           <div class="kt-portlet__head-label">
@@ -14,7 +15,8 @@
         </div>
         <div class="kt-portlet__body">
           <div class="row">
-            <div class="col-lg-6 col-md-6">
+            <div class="col-md-6"
+                 [class.col-lg-3]="type === FormMode.Create">
               <mat-form-field appearance="outline"
                               class="width-100">
                 <mat-label>
@@ -36,7 +38,8 @@
                 </mat-error>
               </mat-form-field>
             </div>
-            <div class="col-lg-6 col-md-6">
+            <div class="col-md-6"
+                 [class.col-lg-3]="type === FormMode.Create">
               <mat-form-field appearance="outline"
                               class="width-100">
                 <mat-label i18n>Business Vertical</mat-label>
@@ -130,7 +133,8 @@
             </div>
           </div>
 
-          <div class="text-center">
+          <div *ngIf="linkingInfoQrCodeText"
+               class="text-center">
             <qrcode [qrdata]="linkingInfoQrCodeText"
                     [width]="180"
                     margin="0"
