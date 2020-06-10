@@ -7,11 +7,11 @@ export function toParamsString(model: any): string {
     if (model.hasOwnProperty(key)) {
       const prop = (model as any)[key];
       // formData.append(key, prop);
-      params.push({key, value: encodeURIComponent(prop.toString())});
+      params.push({key, value: prop ? encodeURIComponent(prop.toString()) : ''});
     }
   }
 
-  const paramsStr = '?' + params.map(param => `${param.key}=${param.value}`).join('&');
+  const paramsStr = '?' + params.map((param) => `${param.key}=${param.value}`).join('&');
 
   return paramsStr;
 }

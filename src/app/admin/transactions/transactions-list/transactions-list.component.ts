@@ -31,11 +31,12 @@ export class TransactionsListComponent implements OnInit {
   totalCount = Infinity;
   baseCurrencyCode: string;
   assetSymbol = TOKEN_SYMBOL;
+  DATETIME_WITH_SECONDS_FORMAT = constants.DATETIME_WITH_SECONDS_FORMAT;
   isLoading = true;
   isSearching = false;
   transactions: Transaction[] = [];
   dataSource: MatTableDataSource<Transaction>;
-  timestampFromDate: Moment = moment.utc().add(-6, 'd');
+  timestampFromDate: Moment = moment.utc().add(-13, 'd');
   timestampToDate: Moment = moment.utc();
   periodMaxDate: Moment = moment.utc();
   isExporting: boolean;
