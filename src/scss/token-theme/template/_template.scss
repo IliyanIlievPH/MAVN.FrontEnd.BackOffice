@@ -103,10 +103,16 @@ label {
 
 .kt-portlet {
   .kt-portlet__head {
+    padding: 0 15px;
+
     .kt-portlet__head-label {
       .kt-portlet__head-title {
         font-weight: 600;
       }
     }
+  }
+
+  .kt-portlet__body {
+    padding: 15px;
   }
 }

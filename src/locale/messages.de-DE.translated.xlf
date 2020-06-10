@@ -1000,6 +1000,10 @@
         <source>Name</source>
         <target state="translated">Name</target>
       </trans-unit>
+      <trans-unit id="d6199dc9a19b2f9af66e330476041df8667cdc29" datatype="html">
+        <source>KYC Status</source>
+        <target state="translated">KYC Status</target>
+      </trans-unit>
       <trans-unit id="ff94d2e7b6ac6938a388aa9c4e05e2346d1514ad" datatype="html">
         <source>Created at</source>
         <target state="translated">Erstellt am</target>
@@ -1019,6 +1023,22 @@
       <trans-unit id="aff709e8d4dd0605b1d56ee04218646a5b06c142" datatype="html">
         <source>Business Units</source>
         <target state="translated">Geschäftsbereiche</target>
+      </trans-unit>
+      <trans-unit id="d81f00c85d3b507f3e3d78bfc617a2c66e028391" datatype="html">
+        <source>New</source>
+        <target state="translated">Neu</target>
+      </trans-unit>
+      <trans-unit id="5a5d7ee2acbfa9c91ab7f41d26bda9ff0cafe42f" datatype="html">
+        <source>Comment</source>
+        <target state="translated">Kommentar</target>
+      </trans-unit>
+      <trans-unit id="024cdb2814b0cb3f4ced148f1a0b9854447cb214" datatype="html">
+        <source>Change</source>
+        <target state="translated">Veränderung</target>
+      </trans-unit>
+      <trans-unit id="148d5f048edba9abcd86344b11b5923f35f4a538" datatype="html">
+        <source>Admin User Id</source>
+        <target state="translated">Admin-Benutzer-ID</target>
       </trans-unit>
       <trans-unit id="12173aaf994c8adc7e39bfc768052e1d4c9f7a8f" datatype="html">
         <source>Business Unit Name</source>
@@ -1971,6 +1991,30 @@
       <trans-unit id="b0c63e3c398d5d20ae7b05e1ba6dbea59c54cdb9" datatype="html">
         <source>Unknown error</source>
         <target state="translated">Unbekannter Fehler</target>
+      </trans-unit>
+      <trans-unit id="Partner.Kyc.SuccessChange" datatype="html">
+        <source>Status has been changed successfully.</source>
+        <target state="translated">Der Status wurde erfolgreich geändert.</target>
+      </trans-unit>
+      <trans-unit id="KycStatus.Pending" datatype="html">
+        <source>Unverified</source>
+        <target state="translated">Nicht überprüft</target>
+      </trans-unit>
+      <trans-unit id="KycStatus.InReview" datatype="html">
+        <source>In Review</source>
+        <target state="translated">Im Rückblick</target>
+      </trans-unit>
+      <trans-unit id="KycStatus.Rejected" datatype="html">
+        <source>Rejected</source>
+        <target state="translated">Abgelehnt</target>
+      </trans-unit>
+      <trans-unit id="KycStatus.Accepted" datatype="html">
+        <source>Verified</source>
+        <target state="translated">Verifiziert</target>
+      </trans-unit>
+      <trans-unit id="KycStatus.RequiresData" datatype="html">
+        <source>Requires Data</source>
+        <target state="translated">Benötigt Daten</target>
       </trans-unit>
     </body>
   </file>

@@ -90,8 +90,8 @@
                   </div>
                 </div>
               </th>
-              <th style="width: 100px"
-                i18n>Status</th>
+              <th style="width: auto"
+                  i18n>KYC Status</th>
               <th style="width: 120px"
                   i18n>Vertical</th>
               <!-- <th style="width: auto"
@@ -112,26 +112,7 @@
                 <span>{{partner.Name}}</span>
               </td>
               <td data-id="status">
-                <span class="kt-badge kt-badge--dot kt-badge--md"
-                      [ngClass]="{InReview: 'kt-badge--warning', Rejected: 'kt-badge--danger', Accepted: 'kt-badge--active', RequiresData: 'kt-badge--gray', Pending: 'kt-badge--warning'}[partner.KycStatus]"></span>
-
-                <ng-container [ngSwitch]="partner.KycStatus">
-                  <ng-container *ngSwitchCase="KycStatusState.InReview">
-                    <span i18n>In Review</span>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="KycStatusState.Rejected">
-                    <span i18n>Rejected</span>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="KycStatusState.Accepted">
-                    <span i18n>Accepted</span>
-                  </ng-container>
-                  <ng-container *ngSwitchCase="KycStatusState.RequiresData">
-                    <span i18n>RequiresData</span>
-                  </ng-container>
-                  <ng-container *ngSwitchDefault>
-                    <span i18n>Pending</span>
-                  </ng-container>
-                </ng-container>
+                <app-kyc-status-badge [kycStatus]="partner.KycStatus"></app-kyc-status-badge>
               </td>
               <td data-id="vertical">
                 <ng-template ngFor
@@ -146,7 +127,7 @@
                 {{partner.AmountInTokens | token}} {{assetSymbol}} = {{partner.AmountInCurrency}} {{baseCurrencyCode}}
               </td> -->
               <td data-id="createdAt">
-                <span>{{partner.CreatedAt | date:'dd/MM/yyyy'}}</span>
+                <span>{{partner.CreatedAt | date: DATEONLY_FORMAT}}</span>
               </td>
               <td data-id="actions">
                 <a [routerLink]="['edit-partner', partner.Id]"

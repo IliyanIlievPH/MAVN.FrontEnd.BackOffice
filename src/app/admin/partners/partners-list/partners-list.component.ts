@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild, TemplateRef, ElementRef} from '@angular/core';
 import {PartnersService} from '../partners.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {TOKEN_SYMBOL} from 'src/app/core/constants/const';
+import {TOKEN_SYMBOL, DATEONLY_FORMAT} from 'src/app/core/constants/const';
 import {PartnerRowResponse} from '../models/partner-row.interface';
 import {Subscription} from 'rxjs';
 import {PageRequestModel} from 'src/app/shared/pagination-container/models/pageRequestModel.interface';
@@ -16,7 +16,6 @@ import {BusinessVerticalTypeItem} from '../models/business-vertical-type-item.in
 import {AuthenticationService} from 'src/app/authentication/authentication.service';
 import {PermissionType} from '../../user/models/permission-type.enum';
 import {HeaderMenuService} from 'src/app/shared/services/header-menu.service';
-import {KycStatusState} from '../models/kyc-status-state.enum';
 
 @Component({
   selector: 'app-partners-list',
@@ -26,12 +25,12 @@ import {KycStatusState} from '../models/kyc-status-state.enum';
 export class PartnersListComponent implements OnInit {
   @ViewChild('subHeaderTemplate', {static: true}) private subHeaderTemplate: TemplateRef<any>;
   assetSymbol = TOKEN_SYMBOL;
+  DATEONLY_FORMAT = DATEONLY_FORMAT;
   baseCurrencyCode: string;
   loading = true;
   isSearching: boolean;
   dataSource: PartnerRowResponse[] = [];
   BusinessVertical = BusinessVerticalType;
-  KycStatusState = KycStatusState;
   totalCount: number;
   searchNameValue: string;
   isVisibleSearchName: boolean;

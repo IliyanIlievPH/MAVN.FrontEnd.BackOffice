@@ -1,4 +1,4 @@
-export enum KycStatusState {
+export enum KycStatus {
   Pending = 'Pending',
   InReview = 'InReview',
   Rejected = 'Rejected',

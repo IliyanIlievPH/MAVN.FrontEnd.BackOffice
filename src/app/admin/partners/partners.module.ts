@@ -8,6 +8,7 @@ import {PartnersRoutingModule} from './partners-routing.module';
 import {SharedModule} from 'src/app/shared/shared.module';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {QRCodeModule} from 'angularx-qrcode';
+import {KycStatusBadgeComponent} from './kyc-status-badge/kyc-status-badge.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {QRCodeModule} from 'angularx-qrcode';
     PartnerFormComponent,
     PartnerEditComponent,
     PartnerAddComponent,
+    KycStatusBadgeComponent,
   ],
   imports: [
     // modules

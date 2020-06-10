@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild, TemplateRef, ElementRef} from '@angular/co
 import {PartnersService} from '../partners.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Router} from '@angular/router';
-import {Partner} from '../models/partner.interface';
 import {PartnerInfo} from '../models/partner-info.interface';
 import {HeaderMenuService} from 'src/app/shared/services/header-menu.service';
 import {PaymentProvidersService} from '../services/payment-providers.service';
@@ -19,7 +18,6 @@ export class PartnerAddComponent implements OnInit {
   @ViewChild('subHeaderTemplate', {static: true}) private subHeaderTemplate: TemplateRef<any>;
   isFormDisabled = false;
   loading = false;
-  partner: Partner;
   provider: Provider;
   partnerId: string;
 

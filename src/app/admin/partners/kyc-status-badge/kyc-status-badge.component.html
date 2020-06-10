@@ -1,0 +1,17 @@
+<ng-container *ngIf="kycStatus">
+  <span *ngIf="!isLabel"
+        class="kt-badge kt-badge--dot kt-badge--md"
+        [class.kt-badge--metal]="kycStatus === KycStatus.Pending"
+        [class.kt-badge--info]="kycStatus === KycStatus.InReview"
+        [class.kt-badge--warning]="kycStatus === KycStatus.RequiresData"
+        [class.kt-badge--danger]="kycStatus === KycStatus.Rejected"
+        [class.kt-badge--success]="kycStatus === KycStatus.Accepted"></span>
+  <span class="btn btn-bold btn-sm btn-font-md"
+        [class.btn-label-dark]="kycStatus === KycStatus.Pending"
+        [class.btn-label-info]="kycStatus === KycStatus.InReview"
+        [class.btn-label-warning]="kycStatus === KycStatus.RequiresData"
+        [class.btn-label-danger]="kycStatus === KycStatus.Rejected"
+        [class.btn-label-success]="kycStatus === KycStatus.Accepted"
+        *ngIf="isLabel">{{kycStatusItemsDict[kycStatus]}}</span>
+  <span *ngIf="!isLabel">{{kycStatusItemsDict[kycStatus]}}</span>
+</ng-container>

@@ -36,8 +36,14 @@ import {PaymentProvidersType} from '../models/payment-providers-type.enum';
 import {AddressChangedEvent} from 'src/app/shared/location-map/models/address-changed-event.interface';
 import {LinkingInfoResponse} from '../models/response/linking-info-response.interface';
 import {PartnersService} from '../partners.service';
-import {KycStatusState} from '../models/kyc-status-state.enum';
+import {KycStatus} from '../models/kyc/kyc-status.enum';
 import {KycService} from '../services/kyc.service';
+import {KycStatusService} from '../services/kyc-status.service';
+import {KycStatusItem} from '../models/kyc/kyc-status-item.interface';
+import {KycInfo} from '../models/kyc/kyc-info.interface';
+import {KycInfoHistory} from '../models/kyc/kyc-info-history.interface';
+import {Router} from '@angular/router';
+import {UpdateKycInfoRequest} from '../models/kyc/update-kyc-info-request.interface';
 @Component({
   selector: 'app-partner-form',
   templateUrl: './partner-form.component.html',
@@ -58,9 +64,24 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
 
   @Input()
   partner: Partner;
-  KycStatusState = KycStatusState;
-  kycStatusStateKeys: string[] = Object.keys(KycStatusState);
-  kycStatusStateValues: string[] = Object.keys(KycStatusState);
+
+  currentKycStatus: KycStatus;
+  kycFormProps = {
+    KycStatus: 'KycStatus',
+    Comment: 'Comment',
+  };
+  kycForm = this.fb.group({
+    [this.kycFormProps.KycStatus]: [null, [Validators.required]],
+    [this.kycFormProps.Comment]: [null],
+  });
+  isKycCommentRequired = false;
+  isSavingKycStatus = false;
+  errorSavingKycStatus: string;
+  KycStatus = KycStatus;
+  kycStatusItems: KycStatusItem[] = [];
+  isLoadingKycHistory = true;
+  kycHistoryItems: KycInfoHistory[] = [];
+  DATETIME_WITH_SECONDS_FORMAT = constants.DATETIME_WITH_SECONDS_FORMAT;
 
   paymentProviders: ProviderOptions[] = [];
   PaymentProvidersType = PaymentProvidersType;
@@ -97,6 +118,7 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
   }
   isPartnerAdmin = false;
   hasEditPermission = false;
+  hasEditKycPermission = false;
   isLoadingLinkingInfo = true;
   isRegeneratingLinkingInfo = false;
   linkingInfoModel: LinkingInfoResponse = {
@@ -107,20 +129,24 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private authenticationService: AuthenticationService,
-    private paymentProvidersService: PaymentProvidersService,
-    private settingsSetvice: SettingsService,
+    private businessVerticalService: BusinessVerticalService,
     private fb: FormBuilder,
     private globalSettingsService: GlobalSettingsService,
+    private kycService: KycService,
+    private kycStatusService: KycStatusService,
     private partnersService: PartnersService,
+    private paymentProvidersService: PaymentProvidersService,
+    private router: Router,
+    private settingsSetvice: SettingsService,
     private snackBar: MatSnackBar,
-    private translateService: TranslateService,
-    private businessVerticalService: BusinessVerticalService,
-    private kycService: KycService
+    private translateService: TranslateService
   ) {
     this.templates = this.translateService.templates;
     this.baseCurrencyCode = this.settingsSetvice.baseCurrencyCode;
     this.isPartnerAdmin = this.authenticationService.isPartnerAdmin();
     this.hasEditPermission = this.authenticationService.getUserPermissions()[PermissionType.ProgramPartners].Edit || this.isPartnerAdmin;
+    this.hasEditKycPermission = this.authenticationService.getUserPermissions()[PermissionType.ProgramPartners].Edit;
+    this.kycStatusItems = this.kycStatusService.getItems();
   }
 
   FormMode = FormMode;
@@ -199,9 +225,7 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
     this.loadRate();
 
     if (this.partner) {
-      this.kycService.getById(this.partner.Id).subscribe((result: any) => {
-        console.log('result', result);
-      });
+      this.loadKycInfo();
 
       this.partner.Locations.forEach(() => {
         this.locationsFormArray.push(this.generateLocationsFormGroup());
@@ -231,6 +255,13 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
       this.updateValuesForHiddenLocationFields();
     }
 
+    this.addSubscriptions();
+
+    this.previousPage = window.history.state.page;
+    this.loadPaymentProviders();
+  }
+
+  private addSubscriptions() {
     this.subscriptions = [
       this.partnerForm.get(this.partnerFormProps.UseGlobalCurrencyRate).valueChanges.subscribe((value) => {
         if (value) {
@@ -239,10 +270,53 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
           this.disableRateFields(false);
         }
       }),
-    ];
+      this.kycForm.get(this.kycFormProps.KycStatus).valueChanges.subscribe((value) => {
+        const commentControl = this.kycForm.get(this.kycFormProps.Comment);
 
-    this.previousPage = window.history.state.page;
-    this.loadPaymentProviders();
+        if (value === KycStatus.Rejected) {
+          commentControl.setValidators([Validators.required]);
+          this.isKycCommentRequired = true;
+        } else {
+          commentControl.setValidators(null);
+          this.isKycCommentRequired = false;
+        }
+
+        commentControl.updateValueAndValidity();
+      }),
+    ];
+  }
+
+  private loadKycInfo() {
+    this.kycService.getById(this.partner.Id).subscribe(
+      (result: KycInfo) => {
+        if (result) {
+          this.currentKycStatus = result.KycStatus;
+
+          if (this.currentKycStatus !== KycStatus.Pending) {
+            this.loadKycHistory();
+          }
+        }
+      },
+      (error) => {
+        console.error(error);
+        this.snackBar.open(this.translateService.translates.ErrorMessage, this.translateService.translates.CloseSnackbarBtnText);
+      }
+    );
+  }
+  private loadKycHistory() {
+    this.kycService.getHistory(this.partner.Id).subscribe(
+      (result: KycInfoHistory[]) => {
+        if (result) {
+          this.kycHistoryItems = result;
+        }
+
+        this.isLoadingKycHistory = false;
+      },
+      (error) => {
+        console.error(error);
+        this.snackBar.open(this.translateService.translates.ErrorMessage, this.translateService.translates.CloseSnackbarBtnText);
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -404,6 +478,61 @@ export class PartnerFormComponent implements OnInit, OnDestroy {
   }
 
   // #endregion Payment Integrations
+
+  changeKycStatus() {
+    if (!this.hasEditKycPermission) {
+      return;
+    }
+
+    markFormControlAsTouched(this.kycForm);
+
+    if (!this.kycForm.valid) {
+      this.snackBar.open(this.translates.fillRequiredFieldsMessage, this.translateService.translates.CloseSnackbarBtnText, {
+        duration: 5000,
+      });
+      return;
+    }
+
+    this.isSavingKycStatus = true;
+    this.errorSavingKycStatus = '';
+    const model = this.kycForm.getRawValue() as UpdateKycInfoRequest;
+    model.PartnerId = this.partner.Id;
+
+    this.kycService.changeKycStatus(model).subscribe(
+      (result) => {
+        if (result && result.Error !== 'None') {
+          this.snackBar.open(this.translateService.translates.ErrorMessage, this.translateService.translates.CloseSnackbarBtnText);
+          this.isSavingKycStatus = false;
+          this.errorSavingKycStatus = result.Error;
+          return;
+        }
+
+        this.snackBar.open(
+          $localize`:@@Partner.Kyc.SuccessChange:Status has been changed successfully.`,
+          this.translateService.translates.CloseSnackbarBtnText,
+          {
+            duration: 5000,
+          }
+        );
+
+        this.isSavingKycStatus = false;
+        this.navigateToList();
+      },
+      (error) => {
+        console.error(error);
+        this.snackBar.open(this.translateService.translates.ErrorMessage, this.translateService.translates.CloseSnackbarBtnText);
+      }
+    );
+  }
+
+  private navigateToList() {
+    this.router.navigate(['/admin/platform/partners'], {
+      queryParams: {
+        page: this.previousPage,
+        pageSize: this.previousPageSize,
+      },
+    });
+  }
 
   onSubmit() {
     if (!this.hasEditPermission) {

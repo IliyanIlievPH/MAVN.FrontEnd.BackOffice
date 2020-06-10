@@ -1,3 +1,124 @@
+<form *ngIf="partner && hasEditKycPermission"
+      [formGroup]="kycForm"
+      (ngSubmit)="changeKycStatus()"
+      (keydown.enter)="$event.preventDefault()"
+      class="kt-portlet">
+  <div class="kt-portlet__head kt-portlet__head--lg">
+    <div class="kt-portlet__head-label">
+      <h3 class="kt-portlet__head-title"
+          i18n>KYC Status</h3>
+    </div>
+  </div>
+  <div class="kt-portlet__body">
+    <div class="row">
+      <div class="col-lg-4">
+        <mat-form-field appearance="outline"
+                        class="width-100">
+          <mat-label>
+            <span i18n>New</span>
+            <span>&nbsp;</span>
+            <span i18n>KYC Status</span>
+          </mat-label>
+          <mat-select matInput
+                      [formControlName]="kycFormProps.KycStatus"
+                      required>
+            <mat-option *ngFor="let code of kycStatusItems"
+                        [value]="code.Value">{{code.DisplayName}}</mat-option>
+          </mat-select>
+          <mat-error>
+            <app-error-message [controlName]="kycFormProps.KycStatus"></app-error-message>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-lg-8">
+        <mat-form-field appearance="outline"
+                        class="width-100">
+          <mat-label i18n>Comment</mat-label>
+          <textarea matInput
+                    [formControlName]="kycFormProps.Comment"
+                    maxlength="1000"
+                    [required]="isKycCommentRequired"
+                    style="min-height: 60px"></textarea>
+          <mat-error>
+            <app-error-message [controlName]="kycFormProps.Comment"></app-error-message>
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <span *ngIf="errorSavingKycStatus"
+              class="error-text font-weight-bold">
+          <span>{{errorSavingKycStatus}}</span>
+        </span>
+      </div>
+      <div>
+        <button type="submit"
+                class="btn btn-brand btn-upper btn-bold"
+                style="min-width: 120px;"
+                [disabled]="isSavingKycStatus">
+          <span i18n>Change</span>
+          <span>&nbsp;</span>
+          <span i18n>KYC Status</span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="isSavingKycStatus">
+      <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+    </div>
+  </div>
+</form>
+
+<div *ngIf="currentKycStatus && currentKycStatus !== KycStatus.Pending"
+     class="kt-portlet">
+  <div class="kt-portlet__head kt-portlet__head--lg">
+    <div class="kt-portlet__head-label">
+      <h3 class="kt-portlet__head-title">
+        <span i18n>KYC Status</span>
+        <span>&nbsp;</span>
+        <span i18n>History</span>
+      </h3>
+    </div>
+  </div>
+  <div class="kt-portlet__body">
+    <div class="spinner-wrapper">
+      <div class="spinner-container spinner-container--top"
+           *ngIf="isLoadingKycHistory">
+        <div class="spinner-border"></div>
+      </div>
+    </div>
+
+    <div *ngIf="!isLoadingKycHistory">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th style="width: 140px"
+                i18n>KYC Status</th>
+            <th style="width: auto"
+                i18n>Comment</th>
+            <th style="width: 140px"
+                i18n>Date</th>
+            <th style="width: 265px"
+                i18n>Admin User Id</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let history of kycHistoryItems; let i = index">
+            <td>
+              <app-kyc-status-badge [kycStatus]="history.NewKycStatus"></app-kyc-status-badge>
+            </td>
+            <td style="white-space: normal;">{{history.Comment}}</td>
+            <td>{{history.Timestamp | date : DATETIME_WITH_SECONDS_FORMAT}}</td>
+            <td>{{history.AdminUserId}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
 <form [formGroup]="partnerForm"
       (ngSubmit)="onSubmit()"
       (keydown.enter)="$event.preventDefault()"
@@ -11,6 +132,16 @@
           <div class="kt-portlet__head-label">
             <span class="kt-portlet__head-title"
                   i18n>Basic Information</span>
+          </div>
+          <div *ngIf="partner"
+               class="kt-portlet__head-label">
+            <span class="kt-portlet__head-title">
+              <span style="font-size: 1rem; font-weight: 400;"
+                    i18n>KYC Status</span>
+              <span>:&nbsp;</span>
+              <app-kyc-status-badge [kycStatus]="currentKycStatus"
+                                    isLabel="true"></app-kyc-status-badge>
+            </span>
           </div>
         </div>
         <div class="kt-portlet__body">
@@ -52,24 +183,6 @@
                 </mat-select>
                 <mat-error>
                   <app-error-message controlName="BusinessVertical"></app-error-message>
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6">
-              <mat-form-field appearance="outline"
-                              class="width-100">
-                <mat-label i18n>Status</mat-label>
-                <mat-select formControlName="KycStatus"
-                            placeholder="Status"
-                            i18n-placeholder
-                            required>
-                  <mat-option *ngFor="let kycState of kycStatusStateKeys"
-                              [value]="kycState">{{KycStatusState[kycState]}}</mat-option>
-                </mat-select>
-                <mat-error>
-                  <app-error-message controlName="KycStatus"></app-error-message>
                 </mat-error>
               </mat-form-field>
             </div>

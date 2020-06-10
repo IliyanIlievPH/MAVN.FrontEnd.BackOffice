@@ -3,7 +3,7 @@ import {BusinessVerticalTypeItem} from '../models/business-vertical-type-item.in
 import {BusinessVerticalType} from '../models/business-vertical.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BusinessVerticalService {
   private businessVerticalItems: BusinessVerticalTypeItem[];
@@ -20,7 +20,7 @@ export class BusinessVerticalService {
     this.businessVerticalItems = [
       {Type: BusinessVerticalType.Hospitality, DisplayName: ''},
       {Type: BusinessVerticalType.RealEstate, DisplayName: ''},
-      {Type: BusinessVerticalType.Retail, DisplayName: ''}
+      {Type: BusinessVerticalType.Retail, DisplayName: ''},
     ];
   }
 }
