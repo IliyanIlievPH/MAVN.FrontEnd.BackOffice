@@ -55,6 +55,7 @@ i.success {
   color: $green;
 }
 
-i.fail {
+i.fail,
+.error-text {
   color: $error-color;
 }

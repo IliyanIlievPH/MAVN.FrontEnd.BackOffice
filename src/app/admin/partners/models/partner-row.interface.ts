@@ -1,4 +1,5 @@
 import {BusinessVerticalType} from './business-vertical.enum';
+import {KycStatus} from './kyc/kyc-status.enum';
 
 export interface PartnerRowResponse {
   Id: string;
@@ -9,6 +10,8 @@ export interface PartnerRowResponse {
   CreatedAt: Date;
   CreatedBy: string;
   BusinessVertical?: BusinessVerticalType;
+  KycStatus: KycStatus;
+  // additional fields for representation
   IsHidden: boolean;
   Currency: number;
   // load additionally

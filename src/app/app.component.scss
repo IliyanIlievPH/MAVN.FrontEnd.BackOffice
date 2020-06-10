@@ -1,3 +1,4 @@
+@import '~src/scss/token-theme/utils/variables';
 $disabled-font-color: rgba(0, 0, 0, 0.7);
 
 :host ::ng-deep .mat-form-field-appearance-outline {
@@ -16,18 +17,28 @@ $disabled-font-color: rgba(0, 0, 0, 0.7);
     .mat-form-field-outline-gap,
     .mat-form-field-outline-start {
       border-width: 1px;
-      color: rgba(0, 0, 0, 0.87);
+      color: $dark-primary-text;
+    }
+  }
+
+  &.mat-form-field-invalid {
+    .mat-form-field-outline-thick {
+      .mat-form-field-outline-end,
+      .mat-form-field-outline-gap,
+      .mat-form-field-outline-start {
+        color: $error-color;
+      }
     }
   }
 
   &.mat-form-field {
     .mat-form-field-label {
-      color: rgba(0, 0, 0, 0.87);
+      color: $dark-primary-text;
     }
 
     &.mat-form-field-invalid {
       .mat-form-field-label {
-        color: #f44336;
+        color: $error-color;
       }
     }
   }
