@@ -2,7 +2,11 @@
 
 Firstly install node modules by command:  
 npm ci  
-This command uses package-lock.json file with necessary versions.
+This command uses package-lock.json file with necessary versions.  
+For Mac users this command can be useful if something goes wrong:  
+`sudo npm cache clean`  
+`sudo rm -rf node_modules`  
+`sudo npm ci`
 
 ## Development server
 
