@@ -625,7 +625,11 @@ export class SmartVoucherFormComponent implements OnInit, OnDestroy {
     const campaign = this.voucherCampaignForm.getRawValue() as SmartVoucherCampaign;
     PartnersContainer.HandlePartnersBeforeSaving(campaign);
 
-    if (this.voucherCampaign && this.voucherCampaign.State !== SmartVoucherCampaignState.Deleted) {
+    if (
+      this.voucherCampaign &&
+      this.voucherCampaign.State !== SmartVoucherCampaignState.Deleted &&
+      this.voucherCampaign.State !== SmartVoucherCampaignState.Completed
+    ) {
       campaign.State = this.voucherCampaignForm.get(this.voucherCampaignFormProps.IsPublished).value
         ? SmartVoucherCampaignState.Published
         : SmartVoucherCampaignState.Draft;

@@ -18,6 +18,10 @@
             <span class="float-right context-badge published"
                   i18n>Published</span>
           </ng-container>
+          <ng-container *ngSwitchCase="SmartVoucherCampaignState.Completed">
+            <span class="float-right context-badge completed"
+                  i18n>Completed</span>
+          </ng-container>
           <ng-container *ngSwitchDefault>
             <span class="float-right context-badge draft"
                   i18n>Unknown</span>
@@ -484,9 +488,10 @@
             i18n>Back</span>
     </button>
 
-    <div [hidden]="voucherCampaign && voucherCampaign.State !== SmartVoucherCampaignState.Deleted"
-         class="d-flex align-items-center">
-      <div [hidden]="type === FormMode.Create || !hasEditPermission || voucherCampaign.State === SmartVoucherCampaignState.Published"
+    <div class="d-flex align-items-center">
+      <div [hidden]="type === FormMode.Create || !hasEditPermission ||
+                    voucherCampaign.State === SmartVoucherCampaignState.Published ||
+                    voucherCampaign.State === SmartVoucherCampaignState.Completed"
            class="restriction-wrapper">
         <mat-slide-toggle id="slide_IsPublished"
                           [hidden]="isCheckingAbilityToPublish"
